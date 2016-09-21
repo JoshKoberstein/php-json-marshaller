@@ -126,12 +126,12 @@ class JsonMarshaller
     /**
      * UnMarshall a json string into a PHP class
      * @param string $string the json string
-     * @param string $classString a fully qualified namespaced class for the json to be inserted into
+     * @param string|object $class a fully qualified namespaced class or object for the json to be inserted into
      * @return mixed A fully populated <$classString> class, containing values from the json string
      * @throws JsonDecodeException
      * @throws UnknownPropertyException
      */
-    public function unmarshall($string, $classString)
+    public function unmarshall($string, $class)
     {
         if ($string === null || $string === 'null' || $string === '') {
             return null;
@@ -147,28 +147,31 @@ class JsonMarshaller
             throw new \InvalidArgumentException('You cannot unmarshall an empty string');
         }
 
-        return $this->unmarshallClass($assocArray, $classString);
+        return $this->unmarshallClass($assocArray, $class);
     }
 
     /**
      * Sets the values of an associative array into a <$classString> class
      * @param array $assocArray the associative array containing all of our data
-     * @param string $classString the fully qualified namespaced class which will receive the data
+     * @param string|object $class the fully qualified namespaced class or object which will receive the data
      * @return mixed A fully populated <$classString> class, containing values from the assoc array
      * @throws InvalidTypeException
      * @throws UnknownPropertyException
      * @throws \PhpJsonMarshaller\Exception\ClassNotFoundException
      */
-    protected function unmarshallClass($assocArray, $classString)
+    protected function unmarshallClass($assocArray, $class)
     {
+
+        $classString = is_object($class) ? get_class($class) : $class;
+
         // Decode the class and it's properties
         $decodedClass = $this->classDecoder->decodeClass($classString);
         if (count($decodedClass->getProperties()) == 0 && count($decodedClass->getConstructorParams()) === 0) {
             throw new \InvalidArgumentException("Class $classString doesn't have any @MarshallProperty annotations defined");
         }
 
-        // Create a new class
-        $newClass = $this->createClass($classString, $decodedClass, $assocArray);
+        // Create a new class if class is not object
+        $classInstance = is_object($class) ? $class : $this->createClass($classString, $decodedClass, $assocArray);
 
         foreach ($assocArray as $key => $value) {
 
@@ -181,9 +184,9 @@ class JsonMarshaller
 
                 // Set our result into the class
                 if ($property->hasDirect()) {
-                    $newClass->{$property->getDirect()} = $result;
+                    $classInstance->{$property->getDirect()} = $result;
                 } elseif ($property->hasSetter()) {
-                    $newClass->{$property->getSetter()}($result);
+                    $classInstance->{$property->getSetter()}($result);
                 }
             } else {
                 if ($decodedClass->canIgnoreUnknown() === false) {
@@ -195,7 +198,7 @@ class JsonMarshaller
             }
         }
 
-        return $newClass;
+        return $classInstance;
     }
 
     /**
