@@ -144,7 +144,7 @@ class JsonMarshallerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($json['firstName'], $user->getFirstName());
         $this->assertSame($json['active'], $user->isActive());
         $this->assertEquals(new \DateTime($json['firstLogin']), $user->getFirstLogin());
-        $this->assertSame($json['address']['id'], $user->getAddress()->id);
+        $this->assertSame($json['homeAddress']['id'], $user->getHomeAddress()->id);
         $this->assertSame($json['flags'][0]['id'], $user->getFlags()[0]->id);
         $this->assertEquals(new \DateTime($json['loginDates'][0]), $user->getLoginDates()[0]);
     }
@@ -157,7 +157,7 @@ class JsonMarshallerTest extends \PHPUnit_Framework_TestCase
         $user = $this->marshaller->unmarshall($this->complexKeyValueArrayObject, 'PhpJsonMarshallerTests\ExampleClass\UserAlternate');
 
         $this->assertSame($json['id'], $user->id);
-        $this->assertSame($json['address']['id'], $user->address->id);
+        $this->assertSame($json['homeAddress']['id'], $user->homeAddress->id);
         $this->assertSame($json['flags'][0]['id'], $user->flags[0]->id);
     }
 
@@ -225,7 +225,7 @@ class JsonMarshallerTest extends \PHPUnit_Framework_TestCase
         $user->setActive(true);
         $user->setFirstLogin(new \DateTime('2015-08-12 11:45:32'));
         $user->setRank(5.5);
-        $user->setAddress($address);
+        $user->setHomeAddress($address);
         $user->setFlags([$flag1, $flag2]);
         $user->setLoginDates([
             new \DateTime('2015-08-12 11:40:00'),
@@ -265,17 +265,18 @@ class JsonMarshallerTest extends \PHPUnit_Framework_TestCase
 
         $user = new UserAlternate();
         $user->id = 12345;
-        $user->address = $address;
+        $user->homeAddress = $address;
         $user->flags = [$flag1, $flag2];
 
         $json = $this->marshaller->marshall($user);
         $decoded = json_decode($json, true);
 
         $this->assertEquals($user->id, $decoded['id']);
-        $this->assertEquals($user->address->id, $decoded['address']['id']);
-        $this->assertEquals($user->address->state, $decoded['address']['state']);
-        $this->assertEquals($user->address->street, $decoded['address']['street']);
-        $this->assertEquals($user->address->zip, $decoded['address']['zipcode']);
+        $this->assertEquals($user->homeAddress->id, $decoded['homeAddress']['id']);
+        $this->assertEquals($user->homeAddress->state, $decoded['homeAddress']['state']);
+        $this->assertEquals($user->homeAddress->street, $decoded['homeAddress']['street']);
+        $this->assertEquals($user->homeAddress->zip, $decoded['homeAddress']['zipcode']);
+        $this->assertEquals($user->workAddress, null);
         $this->assertEquals($user->flags[0]->id, $decoded['flags'][0]['id']);
         $this->assertEquals($user->flags[0]->name, $decoded['flags'][0]['name']);
         $this->assertEquals($user->flags[0]->value, $decoded['flags'][0]['value']);

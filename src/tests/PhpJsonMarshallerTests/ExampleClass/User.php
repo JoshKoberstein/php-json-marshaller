@@ -51,9 +51,15 @@ class User
 
     /**
      * @var Address
-     * @MarshallProperty(name="address", type="\PhpJsonMarshallerTests\ExampleClass\Address")
+     * @MarshallProperty(name="homeAddress", type="\PhpJsonMarshallerTests\ExampleClass\Address")
      */
-    protected $address;
+    protected $homeAddress;
+
+    /**
+     * @var Address
+     * @MarshallProperty(name="workAddress", type="\PhpJsonMarshallerTests\ExampleClass\Address")
+     */
+    protected $workAddress;
 
     /**
      * @var Flag[]
@@ -167,20 +173,38 @@ class User
 
     /**
      * @return Address
-     * @MarshallProperty(name="address", type="\PhpJsonMarshallerTests\ExampleClass\Address")
+     * @MarshallProperty(name="homeAddress", type="\PhpJsonMarshallerTests\ExampleClass\Address")
      */
-    public function getAddress()
+    public function getHomeAddress()
     {
-        return $this->address;
+        return $this->homeAddress;
     }
 
     /**
      * @param Address $address
-     * @MarshallProperty(name="address", type="\PhpJsonMarshallerTests\ExampleClass\Address")
+     * @MarshallProperty(name="homeAddress", type="\PhpJsonMarshallerTests\ExampleClass\Address")
      */
-    public function setAddress($address)
+    public function setHomeAddress($address)
     {
-        $this->address = $address;
+        $this->homeAddress = $address;
+    }
+
+    /**
+     * @return Address
+     * @MarshallProperty(name="workAddress", type="\PhpJsonMarshallerTests\ExampleClass\Address")
+     */
+    public function getWorkAddress()
+    {
+        return $this->workAddress;
+    }
+
+    /**
+     * @param Address $address
+     * @MarshallProperty(name="workAddress", type="\PhpJsonMarshallerTests\ExampleClass\Address")
+     */
+    public function setWorkAddress($address)
+    {
+        $this->workAddress = $address;
     }
 
     /**

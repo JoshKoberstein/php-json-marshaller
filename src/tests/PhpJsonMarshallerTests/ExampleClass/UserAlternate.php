@@ -27,9 +27,15 @@ class UserAlternate
 
     /**
      * @var Address
-     * @MarshallProperty(name="address", type="\PhpJsonMarshallerTests\ExampleClass\Address")
+     * @MarshallProperty(name="homeAddress", type="\PhpJsonMarshallerTests\ExampleClass\Address")
      */
-    public $address;
+    public $homeAddress;
+
+    /**
+     * @var Address
+     * @MarshallProperty(name="workAddress", type="\PhpJsonMarshallerTests\ExampleClass\Address")
+     */
+    public $workAddress;
 
     /**
      * @var Flag[]

@@ -46,7 +46,7 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($fromCache->hasProperty('active'));
         $this->assertTrue($fromCache->hasProperty('firstLogin'));
         $this->assertTrue($fromCache->hasProperty('rank'));
-        $this->assertTrue($fromCache->hasProperty('address'));
+        $this->assertTrue($fromCache->hasProperty('homeAddress'));
         $this->assertTrue($fromCache->hasProperty('flags'));
         $this->assertTrue($fromCache->hasProperty('loginDates'));
     }
