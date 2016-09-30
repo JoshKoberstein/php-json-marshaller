@@ -145,9 +145,6 @@ class JsonMarshaller
         if (json_last_error() !== 0) {
             throw new JsonDecodeException('Could not decode the JSON string');
         }
-        if (empty($assocArray)) {
-            throw new \InvalidArgumentException('You cannot unmarshall an empty string');
-        }
 
         return $this->unmarshallClass($assocArray, $class);
     }
