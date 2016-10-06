@@ -76,18 +76,26 @@ class JsonMarshaller
         $result = [];
 
         foreach ($decodedClass->getProperties() as $property) {
-            $value = null;
-            $propertyType = $property->getPropertyType();
 
-            // Get the value from the class
-            if ($property->hasDirect()) {
-                $value = $class->{$property->getDirect()};
-            } elseif ($property->hasGetter()) {
-                $value = $class->{$property->getGetter()}();
+            $hasDirect = $property->hasDirect();
+            $hasGetter = $property->hasGetter();
+
+            if($hasDirect || $hasGetter) {
+
+                $value = null;
+                $propertyType = $property->getPropertyType();
+
+                // Get the value from the class
+                if ($hasDirect) {
+                    $value = $class->{$property->getDirect()};
+                } elseif ($hasGetter) {
+                    $value = $class->{$property->getGetter()}();
+                }
+
+                // Encode it into our json result
+                $result[$property->getAnnotationName()] = $this->encodeValue($value, $propertyType);
+
             }
-
-            // Encode it into our json result
-            $result[$property->getAnnotationName()] = $this->encodeValue($value, $propertyType);
         }
 
         return ($encode ? json_encode($result) : $result);
