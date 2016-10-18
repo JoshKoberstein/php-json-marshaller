@@ -129,14 +129,18 @@ class ClassDecoder
         }
 
         $methodName = $method->getName();
-        $subMethodName = substr($methodName, 0, 3);
+        preg_match('/[^A-Z]+/', lcfirst(str_replace(' ', '', ucwords(str_replace(['_'], ' ', $methodName)))), $matches);
+        $subMethodName = isset($matches[0]) ? $matches[0] : '';
 
-        if ($subMethodName === 'set') {
+        $setters = ['set', 'unmarshall'];
+        $getters = ['get', 'marshall'];
+
+        if (in_array($subMethodName, $setters, true)) {
             if ($classDecoderProperty->getSetter() !== null) {
                 throw new DuplicateAnnotationException("A @MarshallProperty annotation to set {$annotation->getName()} already exists in the class");
             }
             $classDecoderProperty->setSetter($methodName);
-        } elseif ($subMethodName === 'get'
+        } elseif (in_array($subMethodName, $getters, true)
             || (substr($annotation->getType(), 0, 4) === 'bool'
                 && in_array(preg_replace('/' . $annotation->getName() . '$/i', '', $methodName), ['is', 'should', 'can', 'has'])
             )
