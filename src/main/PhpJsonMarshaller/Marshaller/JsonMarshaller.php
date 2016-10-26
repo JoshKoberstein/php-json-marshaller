@@ -169,6 +169,10 @@ class JsonMarshaller
     protected function unmarshallClass($assocArray, $class)
     {
 
+        if ($assocArray === null || $assocArray === 'null' || $assocArray === '') {
+            return null;
+        }
+
         $classString = is_object($class) ? get_class($class) : $class;
 
         // Decode the class and it's properties
