@@ -197,7 +197,20 @@ class JsonMarshaller
                 if ($property->hasDirect()) {
                     $classInstance->{$property->getDirect()} = $result;
                 } elseif ($property->hasSetter()) {
-                    $classInstance->{$property->getSetter()}($result);
+                    $setter = $property->getSetter();
+                    if($propertyType->getType() == 'array') {
+                        $reflection = new \ReflectionMethod($classInstance, $setter);
+                        if($reflection->getParameters()[0]->isVariadic()) {
+                            $result = is_array($result) && $result ? $result : [];
+                            $classInstance->{$setter}(...$result);
+                        }
+                        else {
+                            $classInstance->{$setter}($result);
+                        }
+                    }
+                    else {
+                        $classInstance->{$setter}($result);
+                    }
                 }
             } else {
                 if ($decodedClass->canIgnoreUnknown() === false) {
