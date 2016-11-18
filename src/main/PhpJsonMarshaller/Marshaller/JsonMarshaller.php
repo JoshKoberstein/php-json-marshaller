@@ -236,7 +236,9 @@ class JsonMarshaller
         $result = null;
 
         // Decode the value into our result
-        if ($propertyType->getType() === PropertyTypeObject::TYPE_SCALAR) {
+        if ($value == null) {
+            $result = $value;
+        } elseif ($propertyType->getType() === PropertyTypeObject::TYPE_SCALAR) {
             $result = $propertyType->getValue()->decodeValue($value);
         } elseif ($propertyType->getType() === PropertyTypeObject::TYPE_OBJECT) {
             $result = $this->unmarshallClass($value, $propertyType->getValue());
