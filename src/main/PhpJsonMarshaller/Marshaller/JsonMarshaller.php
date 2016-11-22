@@ -120,11 +120,11 @@ class JsonMarshaller
         } elseif ($propertyType->getType() === PropertyTypeObject::TYPE_ARRAY) {
             $subResult = [];
             $subPropertyType = $propertyType->getValue();
-            foreach ($value as $val) {
+            foreach ($value as $key => $val) {
                 if ($subPropertyType->getType() === PropertyTypeObject::TYPE_SCALAR) {
-                    $subResult[] = $subPropertyType->getValue()->encodeValue($val);
+                    $subResult[$key] = $subPropertyType->getValue()->encodeValue($val);
                 } else {
-                    $subResult[] = $this->marshallClass($val, false);
+                    $subResult[$key] = $this->marshallClass($val, false);
                 }
             }
             $result = $subResult;
@@ -244,11 +244,11 @@ class JsonMarshaller
             $result = $this->unmarshallClass($value, $propertyType->getValue());
         } elseif ($propertyType->getType() === PropertyTypeObject::TYPE_ARRAY) {
             $subPropertyType = $propertyType->getValue();
-            foreach ($value as $val) {
+            foreach ($value as $key => $val) {
                 if ($subPropertyType->getType() === PropertyTypeObject::TYPE_SCALAR) {
-                    $result[] = $subPropertyType->getValue()->decodeValue($val);
+                    $result[$key] = $subPropertyType->getValue()->decodeValue($val);
                 } else {
-                    $result[] = $this->unmarshallClass($val, $subPropertyType->getValue());
+                    $result[$key] = $this->unmarshallClass($val, $subPropertyType->getValue());
                 }
             }
         }
