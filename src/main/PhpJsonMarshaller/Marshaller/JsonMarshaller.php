@@ -244,11 +244,11 @@ class JsonMarshaller
             $result = $this->unmarshallClass($value, $propertyType->getValue());
         } elseif ($propertyType->getType() === PropertyTypeObject::TYPE_ARRAY) {
             $subPropertyType = $propertyType->getValue();
-            foreach ($value as $val) {
+            foreach ($value as $key => $val) {
                 if ($subPropertyType->getType() === PropertyTypeObject::TYPE_SCALAR) {
-                    $result[] = $subPropertyType->getValue()->decodeValue($val);
+                    $result[$key] = $subPropertyType->getValue()->decodeValue($val);
                 } else {
-                    $result[] = $this->unmarshallClass($val, $subPropertyType->getValue());
+                    $result[$key] = $this->unmarshallClass($val, $subPropertyType->getValue());
                 }
             }
         }
