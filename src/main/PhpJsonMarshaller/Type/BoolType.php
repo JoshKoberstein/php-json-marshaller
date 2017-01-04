@@ -32,10 +32,10 @@ class BoolType implements iType
         if (is_object($value) || is_array($value)) {
             throw new InvalidTypeException("Expected boolean but received " . gettype($value));
         }
-        if ($value === 'true' || $value === 1) {
+        if ($value === 'true' || $value === '1' || $value === 1) {
             return true;
         }
-        if ($value === 'false' || $value === 0) {
+        if ($value === 'false' || $value === '0' || $value === 0) {
             return false;
         }
         throw new InvalidTypeException("Expected boolean but received " . gettype($value));
