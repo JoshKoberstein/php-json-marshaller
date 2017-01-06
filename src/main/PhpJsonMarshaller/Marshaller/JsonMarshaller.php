@@ -236,7 +236,7 @@ class JsonMarshaller
         $result = null;
 
         // Decode the value into our result
-        if ($value == null) {
+        if ($value === null) {
             $result = $value;
         } elseif ($propertyType->getType() === PropertyTypeObject::TYPE_SCALAR) {
             $result = $propertyType->getValue()->decodeValue($value);
